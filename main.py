@@ -24,6 +24,9 @@ BOOL_CHOICES: STRINGLIST = ['True', 'False']
 BOOL_MAPPING: dict[str, bool] = {'True': True, 'False': False}
 
 
+print('Type "Exit" at any point to exit the program.')
+
+
 def get_input(question: str, choices: STRINGLIST) -> str:
     while True:
         print(question)
@@ -31,6 +34,8 @@ def get_input(question: str, choices: STRINGLIST) -> str:
         choice = input('Enter choice: ')
         if choice in choices:
             return choice
+        elif choice == 'Exit':
+            sys.exit()
         print('Invalid choice!')
 
 
@@ -558,13 +563,16 @@ class UnoGame:
 def main() -> None:
     game_data = SaveData.read_data()
 
-    for entry in game_data:
-        if 'Player' in entry and not game_data[entry].get('cards', []):
-            new_game_bool = True
-            break
+    if not game_data:
+        new_game_bool = True
     else:
-        new_game_string = get_input('Do you wish to start a new game?', BOOL_CHOICES)
-        new_game_bool = BOOL_MAPPING[new_game_string]
+        for entry in game_data:
+            if 'Player' in entry and not game_data[entry].get('cards', []):
+                new_game_bool = True
+                break
+        else:
+            new_game_string = get_input('Do you wish to start a new game?', BOOL_CHOICES)
+            new_game_bool = BOOL_MAPPING[new_game_string]
 
     if new_game_bool is True:
         new_game_settings = {}
