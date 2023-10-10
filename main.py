@@ -24,9 +24,6 @@ BOOL_CHOICES: STRINGLIST = ['True', 'False']
 BOOL_MAPPING: dict[str, bool] = {'True': True, 'False': False}
 
 
-print('Type "Exit" at any point to exit the program.')
-
-
 def get_input(question: str, choices: STRINGLIST) -> str:
     while True:
         print(question)
@@ -561,6 +558,8 @@ class UnoGame:
 
 
 def main() -> None:
+    print('Type "Exit" at any point to exit the program.')
+
     game_data = SaveData.read_data()
 
     if not game_data:
