@@ -5,6 +5,8 @@ import time
 import json
 import sys
 
+from abc import ABC, abstractmethod
+
 
 """
 
@@ -55,7 +57,7 @@ class SaveData:
             file.write(json.dumps(kwargs))
 
 
-class BaseUnoCard:
+class BaseUnoCard(ABC):
 
     __slots__ = (
         'game',
@@ -87,8 +89,9 @@ class BaseUnoCard:
         else:
             return getattr(sys.modules[__name__], components[0])(game, components[1])
 
+    @abstractmethod
     def play(self) -> None:
-        pass
+        ...
 
 
 class NumberedCard(BaseUnoCard):
