@@ -163,11 +163,15 @@ class NumberedCard(BaseUnoCard):
 
 class SkipCard(BaseUnoCard):
 
+    __slots__ = ()
+
     def play(self) -> None:
         self.game.turn = self.game.next_turn
 
 
 class DrawTwoCard(BaseUnoCard):
+
+    __slots__ = ()
 
     def activate(self, player: Player) -> None:
         count = 1
@@ -200,11 +204,15 @@ class DrawTwoCard(BaseUnoCard):
 
 class ReverseCard(BaseUnoCard):
 
+    __slots__ = ()
+
     def play(self) -> None:
         self.game.spin *= -1
 
 
 class DrawFourCard(BaseUnoCard):
+
+    __slots__ = ()
 
     def __init__(self, game: UnoGame):
         super().__init__(game, None)
@@ -246,6 +254,8 @@ class DrawFourCard(BaseUnoCard):
 
 
 class WildCard(BaseUnoCard):
+
+    __slots__ = ()
 
     def __init__(self, game: UnoGame):
         super().__init__(game, None)
