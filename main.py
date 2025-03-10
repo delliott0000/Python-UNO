@@ -67,10 +67,10 @@ class BaseUnoCard(ABC):
         self.colour = colour
 
     def __str__(self) -> str:
-        return (f"{self.colour} " if self.colour else "") + self.__class__.__name__
+        return (f"{self.colour} " if self.colour else "") + self.display_name
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}:{self.colour}"
+        return f"{type(self).__name__}:{self.colour}"
 
     def __eq__(self, other: BaseUnoCard, /) -> bool:
         return isinstance(other, type(self)) and self.colour == other.colour
@@ -87,9 +87,12 @@ class BaseUnoCard(ABC):
         else:
             return getattr(sys.modules[__name__], components[0])(game, components[1])
 
+    @property
     @abstractmethod
-    def play(self) -> None:
-        pass
+    def display_name(self) -> str: ...
+
+    @abstractmethod
+    def play(self) -> None: ...
 
 
 class NumberedCard(BaseUnoCard):
@@ -107,6 +110,10 @@ class NumberedCard(BaseUnoCard):
 
     def __eq__(self, other: BaseUnoCard | NumberedCard, /) -> bool:
         return super().__eq__(other) and self.number == other.number
+
+    @property
+    def display_name(self) -> str:
+        return str(self.number)
 
     def play(self) -> None:
         if self.game.seven_zero is True:
@@ -164,12 +171,20 @@ class NumberedCard(BaseUnoCard):
 class SkipCard(BaseUnoCard):
     __slots__ = ()
 
+    @property
+    def display_name(self) -> str:
+        return "Skip"
+
     def play(self) -> None:
         self.game.turn = self.game.next_turn
 
 
 class DrawTwoCard(BaseUnoCard):
     __slots__ = ()
+
+    @property
+    def display_name(self) -> str:
+        return "+2"
 
     def activate(self, player: Player, /) -> None:
         count = 1
@@ -203,6 +218,10 @@ class DrawTwoCard(BaseUnoCard):
 class ReverseCard(BaseUnoCard):
     __slots__ = ()
 
+    @property
+    def display_name(self) -> str:
+        return "Reverse"
+
     def play(self) -> None:
         self.game.spin *= -1
 
@@ -212,6 +231,10 @@ class DrawFourCard(BaseUnoCard):
 
     def __init__(self, game: UnoGame, /):
         super().__init__(game, None)
+
+    @property
+    def display_name(self) -> str:
+        return "+4"
 
     def activate(self, player: Player, /) -> None:
         count = 1
@@ -254,6 +277,10 @@ class WildCard(BaseUnoCard):
 
     def __init__(self, game: UnoGame, /):
         super().__init__(game, None)
+
+    @property
+    def display_name(self) -> str:
+        return "Wild Card"
 
     def play(self) -> None:
         current_player = self.game.player_from_turn(self.game.turn)
